@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Items</title>
+    <link rel="stylesheet" href="/filtercat.css">
+</head>
+<body>
+    <div class="search-bar">
+        <form action="/filter" method="get">
+            <input type="text" name="category" placeholder="Category...">
+            <input type="number" name="minPrice" placeholder="Min Price...">
+            <input type="number" name="maxPrice" placeholder="Max Price...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div id="food-items-list">
+        <% allfood.forEach((food) => { %>
+        <div class="food-item">
+            <img src="<%= food.imgBuffer %>" alt="<%= food.Description %>">
+            <h3><%= food.Description %></h3>
+            <p>Category: <%= food.category %></p>
+            <p>Price: ₹<%= food.price %></p>
+            <!-- <button onclick="addToCart('<%= food.Description %>', <%= food.price %>)"%>Add to Cart</button> -->
+        </div>
+        <% }); %>
+    </div>
+</body>
+</html>

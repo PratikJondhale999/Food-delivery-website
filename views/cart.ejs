@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/cart.css">
+</head>
+<body>
+    <div id="food-items-list">
+        <% allfood.forEach((key) => { %>
+        <div class="food-item">
+            <img src="<%= key.imgBuffer %>" alt="Food 1">
+            <h3><%= key.Description %></h3>
+            <p>Pizza, Italian, pasta, desserts</p>
+            <div class="rating">
+                <span>★★★★☆</span>
+            </div>
+            <p class="price" data-price="<%= key.price %>">₹<%= key.price %></p>
+            <!-- Add a form to remove the item from the cart -->
+            <form action="/Cart/remove" method="post">
+                <input type="hidden" name="fooditemId" value="<%= key._id%>">
+                <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-cart" viewBox="0 0 16 16">
+                    <path
+                        d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                </svg> Remove from Cart
+            </button>
+            </form>
+        </div>
+
+        <!-- Add a form to place the order -->
+        <!-- <form action="/placeOrders/orders" method="post">
+            <input type="hidden" name="totalAmount" value="<%= totalPrice %>">
+            <input type="hidden" name="deliveryAddress" value="123 Main Street, City, Country">
+            <button type="submit">Place Order</button>
+        </form> -->
+
+            <body>
+            <h1>Order Details</h1>
+            <form action="/placeOrders/orders" method="post">
+                <input type="hidden" name="totalAmount" value="<%= totalPrice %>">
+                <label for="deliveryAddress">Delivery Address:</label>
+                <input type="text" id="deliveryAddress" name="deliveryAddress" required>
+                <button type="submit">Place Order</button>
+            </form>
+        <% }); %>
+    </div>
+
+    <div class="card">
+        <h2>PRICE DETAILS</h2>
+        <div class="price-details">
+            <div class="detail">
+                <span>Price</span>
+                <span>₹<%= totalPrice %></span>
+            </div>
+            <div class="detail">
+                <span>Delivery Charges</span>
+                <span class="free"><s>₹110</s> Free</span>
+            </div>
+        </div>
+        <hr>
+        <div class="total-amount">
+            <span>Total Amount</span>
+            <span>₹<%= totalPrice %></span>
+        </div>
+    </div>
+
+     
+
+</body>
+</html>
