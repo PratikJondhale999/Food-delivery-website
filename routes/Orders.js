@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
   
 
   try {
-    console.log(req.payload);
+    //console.log(req.payload);
     
     const newOrder = new Order({
       userId: req.payload,
@@ -30,9 +30,10 @@ router.post('/', async (req, res) => {
     const order = await newOrder.save();
 
     // Send a confirmation (for now, we'll just log it)
-    console.log(`Order confirmation sent for order ID: ${order._id}`);
+    //console.log(`Order confirmation sent for order ID: ${order._id}`);
 
-    res.json(order);
+    res.redirect('/');
+    //res.json(order);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

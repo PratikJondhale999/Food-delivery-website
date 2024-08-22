@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const {connectMongoDb} = require("./connection");
 const path = require('path');
@@ -15,9 +16,46 @@ const PagesR = require('./routes/pages');
 const OrdersR = require('./routes/Orders');
 const DisplayOrdersR = require('./routes/DisplayOrders');
 const LogOutR = require('./routes/LogOut');
+const couponR = require('./routes/coupon');
+const flash = require('connect-flash');
+const session = require('express-session');
+const app = express();
+const sanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const paypal = require('paypal-rest-sdk');
+
+const paymentRoute = require('./routes/paymentRoute');
+
+paypal.configure({
+  'mode': 'sandbox', // 'sandbox' or 'live'
+  'client_id': 'AQn56wRCsJLJ_x-kTW_0qv...',
+  'client_secret': 'ELF_hyS_CWu5dkYDPbiYZRWEQRVWJxXYQaEp1mPYyehLx0PeBOUWmNdpzd2xmp2yCM3RDNuLdFLSYmRf'
+});
+
+
+
+
+
+
+
+// Set up session middleware
+app.use(session({
+  secret: "pratik@139eu2", // Replace with a strong secret
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Set up flash middleware
+app.use(flash());
+
+// Make flash messages available in all templates
+app.use((req, res, next) => {
+  res.locals.messages = req.flash();
+  next();
+});
 
 //Instance of express is created.
-const app = express();
+//const app = express();
 
 //upload instance is created
 const upload = multer({dest: 'uploads/'});
@@ -27,7 +65,8 @@ const upload = multer({dest: 'uploads/'});
 app.set('view engine','ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(sanitize());
+app.use(xss());
 
 
 //Connection
@@ -41,7 +80,7 @@ app.use(cookieParser());
 
 
 
- 
+
 app.use('/user',userRouter);
 app.use('/signUp',signUpR);
 app.use('/signIn',signInR);
@@ -52,7 +91,8 @@ app.use('/pagination',PagesR);
 app.use('/placeOrders/Orders',restrictToLoggedinUserOnly, OrdersR);
 app.use('/displayOrders',DisplayOrdersR);
 app.use('/logOut',LogOutR);
-
+app.use('/apply-coupon',restrictToLoggedinUserOnly,couponR);
+app.use('/pay',paymentRoute);
 
 
 
@@ -88,6 +128,7 @@ app.get('/', async (req, res) => {
 app.get('/', (req, res)=>{
   return res.render('index',{});
 })
+
 
   //listen
   app.listen(8000, () => console.log(`Server started!`));
